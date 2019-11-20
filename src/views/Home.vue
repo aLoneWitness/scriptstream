@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <chatbar></chatbar>
+    <chatbar>
+    </chatbar>
   </div>
 </template>
 
