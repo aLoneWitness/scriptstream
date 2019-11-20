@@ -1,8 +1,9 @@
 <template>
   <div class="sidenav">
-    <div id="chat">
-			<input type="text" id="input" placeholder="Type your message..." v-model="newMessage">
-		</div>
+    <div class="messages" >
+
+    </div>
+		<input type="text" id="input" placeholder="Type your message..." v-model="newMessage">
 		<button v-on:click="onMessageSend()">Send Message</button>
 		<p id="presence"></p>
 		<div id="output"></div>
@@ -32,7 +33,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 350px; /* Set the width of the sidebar */
@@ -40,14 +41,39 @@ export default {
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
-  background-color: gray; /* Black */
+  background-color: #1e1f1c; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 20px;
 }
 button {
-  background: #e6e6e6;
-  text-shadow: 0 1px 0 #f3f3f3;
-  margin: .5em 0 2em 0;
-  width: 100%;
+  position: relative;
+  background-color: blueviolet;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  color: white;
+  width: 310px;
+  bottom: 0;
+  align-self: center;
+  margin: 20px 20px 20px 20px;
+  border-radius: 4px;
+}
+#input {
+  width: 310px;
+  text-align: left;
+  color: white;
+}
+.messages {
+  height: 75vh;
+  width: 310px;
+  align-self: center;
+  background-color: white;
+  margin: 20px 2px 20px 20px;
+  border-radius: 4px;
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
-  <div class="home">
+  <div>
     <codeview></codeview>
-    <chatbar>
-    </chatbar>
+    <chatbar></chatbar>
   </div>
 </template>
 
@@ -21,5 +20,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
