@@ -1,10 +1,11 @@
 <template>
   <div class="sidenav">
     <div class="messages" >
-
     </div>
-		<input type="text" id="input" placeholder="Type your message..." v-model="newMessage">
-		<button v-on:click="onMessageSend()">Send Message</button>
+    <div class="inputcontainer">
+      <input type="text" id="input" placeholder="Type your message..." v-model="newMessage">
+    </div>
+		<button v-on:click="onMessageSend()">// SEND MESSAGE //</button>
 		<p id="presence"></p>
 		<div id="output"></div>
   </div>
@@ -47,7 +48,7 @@ export default {
 }
 button {
   position: relative;
-  background-color: blueviolet;
+  background-color: #f92672;
   border: none;
   padding: 15px 32px;
   text-align: center;
@@ -61,19 +62,21 @@ button {
   bottom: 0;
   align-self: center;
   margin: 20px 20px 20px 20px;
-  border-radius: 4px;
 }
 #input {
+  background-color: hsl(80, 6%, 21%);
+  height: 50px;
   width: 310px;
   text-align: left;
   color: white;
+  padding-left: 20px;
 }
+
 .messages {
   height: 75vh;
   width: 310px;
   align-self: center;
   background-color: white;
   margin: 20px 2px 20px 20px;
-  border-radius: 4px;
 }
 </style>
