@@ -69,7 +69,7 @@ button {
   width: 310px;
   text-align: left;
   color: white;
-  padding-left: 20px;
+  margin: 0;
 }
 
 .messages {
