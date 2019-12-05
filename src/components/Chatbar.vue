@@ -21,6 +21,21 @@ export default {
       username: null,
     }
   },
+  props: {
+    socket: Object
+  },
+  mounted(){
+    this.socket = new WebSocket("ws://localhost:8025/websockets/chat/328")
+
+    this.socket.onopen = function() {  
+      alert("Connected")
+    };
+
+    this.socket.onmessage = function(event) {
+      var msg = JSON.parse(event.data)
+      alert(msg.content)
+    };
+  },
   methods: {
     onType: function(event){
       return event
@@ -28,7 +43,10 @@ export default {
     onMessageSend: function(){
       /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
       console.warn(this.newMessage)
-      return this.newMessage
+      var msg = {
+        content: this.newMessage
+      }
+      this.socket.send(JSON.stringify(msg));
     }
   }
 }

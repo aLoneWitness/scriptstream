@@ -7,7 +7,6 @@ import 'prismjs/themes/prism.css'
 // import { defineCustomElements } from 'snippet-highlight/dist/loader';
 
 Vue.config.productionTip = false
-
 // defineCustomElements(window);
 
 new Vue({
