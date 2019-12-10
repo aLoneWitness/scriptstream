@@ -1,7 +1,7 @@
 <template>
   <div class="codeview">
     <div class="settingsbar">
-      <h1>ScriptStream</h1>
+      <h1>ScriptStream - {{this.projectName}}</h1>
        <select>
         <option value="javascript">JS</option>
         <option value="powershell">PS</option>
@@ -48,7 +48,8 @@ export default {
       }
     },
     props: {
-      langs: Object
+      langs: Object,
+      projectName: String
     }
 }
 </script>

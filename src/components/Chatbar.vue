@@ -22,16 +22,18 @@ export default {
     }
   },
   props: {
-    socket: Object
+    socket: Object,
+    projectUUID: String,
   },
   mounted(){
-    this.socket = new WebSocket("ws://localhost:8025/websockets/chat/328")
+    this.socket = new WebSocket("ws://localhost:8025/websockets/chat/" + this.projectUUID)
 
     this.socket.onopen = function() {  
       alert("Connected")
     };
 
     this.socket.onmessage = function(event) {
+      alert("i got message yes")
       var msg = JSON.parse(event.data)
       alert(msg.content)
     };
