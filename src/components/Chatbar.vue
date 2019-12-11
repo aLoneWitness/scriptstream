@@ -1,6 +1,11 @@
 <template>
   <div class="sidenav">
     <div class="messages" >
+      <ul>
+        <li v-for="msg in messages" v-bind:key="msg">
+          {{ msg.content }}
+        </li>
+      </ul>
     </div>
     <div class="inputcontainer">
       <input type="text" id="input" placeholder="Type your message..." v-model="newMessage">
@@ -12,6 +17,7 @@
 </template>
 
 <script>
+
 export default {
   data(){
     return {
@@ -32,11 +38,7 @@ export default {
       alert("Connected")
     };
 
-    this.socket.onmessage = function(event) {
-      alert("i got message yes")
-      var msg = JSON.parse(event.data)
-      alert(msg.content)
-    };
+    this.socket.onmessage = this.onMessage
   },
   methods: {
     onType: function(event){
@@ -49,6 +51,10 @@ export default {
         content: this.newMessage
       }
       this.socket.send(JSON.stringify(msg));
+    },
+    onMessage: function(event) {
+      var msg = JSON.parse(event.data)
+      this.messages.push(msg)
     }
   }
 }
