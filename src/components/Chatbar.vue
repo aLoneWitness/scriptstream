@@ -1,9 +1,9 @@
 <template>
   <div class="sidenav">
-    <div class="messages" >
-      <ul>
+    <div class="messagecontainer" >
+      <ul id="messages">
         <li v-for="msg in messages" v-bind:key="msg">
-          {{ msg.content }}
+          {{ msg.from + ": " + msg.content }}
         </li>
       </ul>
     </div>
@@ -98,11 +98,28 @@ button {
   margin: 0;
 }
 
-.messages {
+.messagecontainer {
   height: 75vh;
   width: 310px;
   align-self: center;
   background-color: white;
   margin: 20px 2px 20px 20px;
 }
+
+#messages {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+#messages li {
+  padding: 5px 10px;
+}
+
+#messages li:nth-child(odd) {
+  background: #eee;
+}
+
 </style>
