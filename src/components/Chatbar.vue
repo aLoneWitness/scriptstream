@@ -32,7 +32,7 @@ export default {
     projectUUID: String,
   },
   mounted(){
-    this.socket = new WebSocket("ws://localhost:8025/websockets/chat/" + this.projectUUID)
+    this.socket = new WebSocket("ws://localhost:8025/websockets/chat/" + this.projectUUID + "/" + this.$store.state.token)
 
     this.socket.onopen = function() {  
       alert("Connected")
