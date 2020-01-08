@@ -18,9 +18,10 @@
       :highlightActiveLine="true"
       mode="javascript"
       theme="monokai"
-      :onChange="onChange"
+      :onChange="onOurChange"
       name="editor"
       :editorProps="{$blockScrolling: true}"
+      :value="this.codeInput"
     />
   </div>
 </template>
@@ -37,19 +38,36 @@ export default {
       this.langs = [
         "Javascript"
       ]
+
+      this.socket = new WebSocket("ws://localhost:8025/websockets/codestream/" + this.projectUUID + "/" + this.$store.state.token)
+
+      this.socket.onopen = function() {  
+        alert("Connected to codestream")
+      };
+
+      this.socket.onmessage = this.onExternalChange
     },
     components: {
       AceEditor,
     },
     methods: {
-      onChange(newValue) {
-        /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
-        console.warn('change', newValue)
+      onOurChange: function(newValue) {
+        var msg = {
+          content: newValue
+        }
+        this.socket.send(JSON.stringify(msg));
+      },
+      onExternalChange: function(event) {
+        var msg = JSON.parse(event.data)
+        this.codeInput = msg.content
       }
     },
     props: {
       langs: Object,
-      projectName: String
+      projectName: String,
+      codeInput: String,
+      socket: Object,
+      projectUUID: String
     }
 }
 </script>

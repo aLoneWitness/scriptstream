@@ -1,6 +1,6 @@
 <template>
   <div>
-    <codeview v-bind:projectName="$route.params.projectuuid"></codeview>
+    <codeview v-bind:projectUUID="$route.params.projectuuid"></codeview>
     <chatbar v-bind:projectUUID="$route.params.projectuuid"></chatbar>
   </div>
 </template>
