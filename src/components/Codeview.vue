@@ -29,7 +29,9 @@
 <script>
 // import Prism from 'vue-prism-component';
 import { Ace as AceEditor } from 'vue2-brace-editor';
- 
+// import Loading from 'vue-loading-overlay'
+// import "vue-loading-overlay/dist/vue-loading.css";
+
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 
@@ -41,8 +43,13 @@ export default {
 
       this.socket = new WebSocket("ws://localhost:8025/websockets/codestream/" + this.projectUUID + "/" + this.$store.state.token)
 
+      let loader = this.$loading.show({
+        container: this.$refs.sidenav,
+        canCancel: false,
+      });
+
       this.socket.onopen = function() {  
-        alert("Connected to codestream")
+        loader.hide()
       };
 
       this.socket.onmessage = this.onExternalChange
@@ -68,6 +75,10 @@ export default {
       codeInput: String,
       socket: Object,
       projectUUID: String
+    },
+    data() {
+      return {
+      }
     }
 }
 </script>

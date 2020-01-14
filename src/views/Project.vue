@@ -14,7 +14,7 @@ export default {
   name: "home",
   components: {
     Chatbar,
-    Codeview
+    Codeview,
   },
   props: {
     projectName: {

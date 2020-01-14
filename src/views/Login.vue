@@ -1,6 +1,7 @@
 <template>
   <div class="login">
-    <GoogleLogin :params="params" :onSuccess="onSuccess" :onFailures="onFailure">Login with google</GoogleLogin>
+    <h2>Please log in to continue.</h2>
+    <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailures="onFailure">Login with google</GoogleLogin>
   </div>
 </template>
 
@@ -28,8 +29,9 @@ export default {
   methods: {
     onSuccess(googleUser) {
       this.$store.dispatch('login', googleUser)
-      this.$router.push('/')
-      
+      .then(() => {
+        this.$router.push('/')
+      })
     },
     onFailure() {
       alert("failure")
@@ -40,6 +42,10 @@ export default {
 
 <style>
 .login {
-  height: 500px;
+  align-content: center;
+  background-color: whitesmoke;
+}
+.abcRioButton {
+  margin: auto;
 }
 </style>

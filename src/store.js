@@ -16,7 +16,7 @@ export default new Vuex.Store({
       state.status = 'loading'
     },
     auth_success(state, token, user) {
-      state.status = 'sucess'
+      state.status = 'success'
       state.token = token
       state.user = user
     },
@@ -30,24 +30,30 @@ export default new Vuex.Store({
   },
   actions: {
     login({commit}, googleUser){
-      var token = googleUser.getAuthResponse().id_token
-      var user = googleUser.getBasicProfile()
-
-      var postData = {
-        gToken: token
-      }
-
-      let axiosConfig = {
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8',
+      return new Promise((resolve, reject) => {
+        var token = googleUser.getAuthResponse().id_token
+        var user = googleUser.getBasicProfile()
+  
+        var postData = {
+          gToken: token
         }
-      };
-
-      axios.post('http://localhost:2000/rest/auth/login', postData, axiosConfig)
-      .then(response => {
-        localStorage.setItem('token', response.data)
-
-        commit('auth_success', token, user)
+  
+        let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+          }
+        };
+  
+        axios.post('http://localhost:2000/rest/auth/login', postData, axiosConfig)
+        .then(response => {
+          /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
+          localStorage.setItem('token', response.data)
+          commit('auth_success', response.data, user)
+          resolve(response)
+        }).catch(err => {
+          localStorage.removeItem('token')
+          reject(err)
+        })
       })
     },
     logout({commit}){
@@ -56,7 +62,10 @@ export default new Vuex.Store({
     },
   },
   getters : {
-    isLoggedIn: state => !!state.token,
+    isLoggedIn: state => {
+      return !!state.token
+    },
+
     getToken: state => {
       return state.token
     }

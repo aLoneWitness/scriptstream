@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Project from './views/Project.vue'
-import About from './views/About.vue'
 import Login from './views/Login.vue'
 import store from './store'
+import Dashboard from './views/Dashboard.vue'
 
 Vue.use(Router)
 
@@ -13,17 +13,20 @@ const router = new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/',
+      name: 'dashboard',
+      component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/project/:projectuuid',
       name: 'project',
       component: Project,
       meta: {
         requiresAuth: true
       }
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: About
     },
     {
       path: '/login',

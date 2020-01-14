@@ -1,5 +1,5 @@
 <template>
-  <div class="sidenav">
+  <div ref="sidenav" class="sidenav">
     <div class="messagecontainer" >
       <ul id="messages">
         <li v-for="msg in messages" v-bind:key="msg">
@@ -27,6 +27,8 @@ export default {
       username: null,
     }
   },
+  components: {
+  },
   props: {
     socket: Object,
     projectUUID: String,
@@ -34,8 +36,14 @@ export default {
   mounted(){
     this.socket = new WebSocket("ws://localhost:8025/websockets/chat/" + this.projectUUID + "/" + this.$store.state.token)
 
+    let loader = this.$loading.show({
+      container: this.$refs.sidenav,
+      canCancel: false,
+    });
+
+
     this.socket.onopen = function() {  
-      alert("Connected")
+      loader.hide()
     };
 
     this.socket.onmessage = this.onMessage

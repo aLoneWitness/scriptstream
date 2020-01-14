@@ -10,6 +10,11 @@ import 'prismjs/themes/prism.css'
 Vue.config.productionTip = false
 // defineCustomElements(window);
 
+import Loading from 'vue-loading-overlay'
+import "vue-loading-overlay/dist/vue-loading.css";
+
+Vue.use(Loading)
+
 new Vue({
   router,
   store,
