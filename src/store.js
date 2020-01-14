@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios';
 
 Vue.use(Vuex)
 
@@ -31,8 +32,23 @@ export default new Vuex.Store({
     login({commit}, googleUser){
       var token = googleUser.getAuthResponse().id_token
       var user = googleUser.getBasicProfile()
-      localStorage.setItem('token', token)
-      commit('auth_success', token, user)
+
+      var postData = {
+        gToken: token
+      }
+
+      let axiosConfig = {
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+        }
+      };
+
+      axios.post('http://localhost:2000/rest/auth/login', postData, axiosConfig)
+      .then(response => {
+        localStorage.setItem('token', response.data)
+
+        commit('auth_success', token, user)
+      })
     },
     logout({commit}){
       commit('logout')

@@ -27,9 +27,9 @@ export default {
   },
   methods: {
     onSuccess(googleUser) {
-      alert(googleUser.get)
       this.$store.dispatch('login', googleUser)
       this.$router.push('/')
+      
     },
     onFailure() {
       alert("failure")
