@@ -12,6 +12,13 @@ Vue.config.productionTip = false
 
 import Loading from 'vue-loading-overlay'
 import "vue-loading-overlay/dist/vue-loading.css";
+import axios from 'axios';
+
+axios.interceptors.request.use(function(config) {
+  const token = store.state.token;
+  config.headers.Authorization = "Bearer" + token
+  return config;
+})
 
 Vue.use(Loading)
 

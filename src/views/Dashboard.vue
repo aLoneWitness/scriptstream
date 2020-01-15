@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h2>Dashboard</h2>
+    <h2>Dashboard</h2>
       
   </div>
 </template>
@@ -10,14 +10,13 @@ import axios from 'axios';
 
 export default {
     mounted: function() {
-        alert("getting projs " + this.$store.state.token)
-        let axiosConfig = {
-          headers: {
-            'Authorization': 'Bearer ' + this.$store.state.token
-          }
-        };
+        // let axiosConfig = {
+        //   headers: {
+        //     'Authorization': 'Bearer ' + this.$store.state.token
+        //   }
+        // };
 
-        axios.get('http://localhost:2000/rest/user/getprojects', axiosConfig)
+        axios.get('http://localhost:2000/rest/user/getprojects')
         .then(response => {
             alert(response.data)
         })

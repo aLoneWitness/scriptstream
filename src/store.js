@@ -49,6 +49,7 @@ export default new Vuex.Store({
           /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
           localStorage.setItem('token', response.data)
           commit('auth_success', response.data, user)
+
           resolve(response)
         }).catch(err => {
           localStorage.removeItem('token')
