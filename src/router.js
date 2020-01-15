@@ -5,7 +5,6 @@ import Project from './views/Project.vue'
 import Login from './views/Login.vue'
 import store from './store'
 import Dashboard from './views/Dashboard.vue'
-import SkillOverview from './views/SkillOverview.vue'
 
 Vue.use(Router)
 
@@ -17,14 +16,6 @@ const router = new Router({
       path: '/',
       name: 'dashboard',
       component: Dashboard,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/skills',
-      name: 'skills',
-      component: SkillOverview,
       meta: {
         requiresAuth: true
       }

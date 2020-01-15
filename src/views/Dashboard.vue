@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h2>Dashboard</h2>
-      
+    <project-overview></project-overview>
+    <skill-overview></skill-overview>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import SkillOverview from '../components/SkillOverview.vue'
+import ProjectOverview from '../components/ProjectOverview.vue'
 
 export default {
     mounted: function() {
@@ -18,13 +20,17 @@ export default {
 
         axios.get('http://localhost:2000/rest/user/getprojects')
         .then(response => {
-            alert(response.data)
+          this.projects = response.data
         })
     },
     data() {
         return {
-            projects: [],
+            projects: Object,
         }
+    },
+    components: {
+      SkillOverview,
+      ProjectOverview
     }
 }
 </script>
