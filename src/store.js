@@ -32,7 +32,7 @@ export default new Vuex.Store({
     login({commit}, googleUser){
       return new Promise((resolve, reject) => {
         var token = googleUser.getAuthResponse().id_token
-        var user = googleUser.getBasicProfile()
+        var user
   
         var postData = {
           gToken: token
@@ -48,6 +48,12 @@ export default new Vuex.Store({
         .then(response => {
           /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
           localStorage.setItem('token', response.data)
+
+          axios.get('http://localhost:2000/rest/user/getprofile')
+          .then(response => {
+            user = response.data
+          })
+
           commit('auth_success', response.data, user)
 
           resolve(response)

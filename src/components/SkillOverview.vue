@@ -1,7 +1,7 @@
 <template>
   <div class="skillbar">
     <h2>Skills</h2>
-    <b-button variant="success" id="addbtn">Add skill</b-button>
+    <b-button v-on:click="addSkill()" variant="success" id="addbtn">Add skill</b-button>
     <b-list-group class="skill">
       <b-list-group-item v-for="skill in skills" :key="skill">
         {{skill.name}}
@@ -30,6 +30,19 @@ export default {
   methods: {
     removeSkill(skill) {
       axios.post('http://localhost:2000/rest/user/removeskill', skill)
+      .then(() => {
+        axios.get('http://localhost:2000/rest/user/getskills')
+        .then(response => {
+          this.skills = response.data
+        })
+      })
+    },
+    addSkill() {
+      var skill = {
+        name: "Machine Learning",
+        sPercentage: 30,
+      }
+      axios.post('http://localhost:2000/rest/user/addskill', skill)
       .then(() => {
         axios.get('http://localhost:2000/rest/user/getskills')
         .then(response => {

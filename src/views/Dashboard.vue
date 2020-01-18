@@ -18,15 +18,7 @@ export default {
         //   }
         // };
 
-        axios.get('http://localhost:2000/rest/user/getprojects')
-        .then(response => {
-          this.projects = response.data
-        })
-    },
-    data() {
-        return {
-            projects: Object,
-        }
+        
     },
     components: {
       SkillOverview,
