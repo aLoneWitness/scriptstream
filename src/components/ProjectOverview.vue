@@ -1,6 +1,7 @@
 <template>
   <div class="projbar">
     <h2>Projects</h2>
+    <h4 style="margin-top: 50px">Private</h4>
     <b-button v-b-modal.modal-prevent-closing variant="success" id="addbtn">New project</b-button>
 
     <b-modal
@@ -31,12 +32,14 @@
     <b-list-group class="ownedprojects">
       <b-list-group-item v-for="oProject in ownedProjects" :key="oProject">
       {{oProject.name}}
+        <b-button v-on:click="togglePrivacy(oProject)" variant="warning" size="sm">Make Public</b-button>
         <b-button-group style="float: right">
           <b-button v-on:click="gotoProject(oProject)" variant="success" size="sm">Join</b-button>
           <b-button v-on:click="deleteProject(oProject)" variant="danger" size="sm">Delete</b-button>
         </b-button-group>
       </b-list-group-item>
     </b-list-group> 
+    <h4 style="margin-top: 50px">Public</h4>
     <b-button v-on:click="match()" variant="success" id="matchbtn">Match me with a project</b-button>
 
     <b-list-group class="joinedprojects">
@@ -75,6 +78,18 @@ export default {
     }
   },
   methods: {
+    togglePrivacy(project){
+      axios.post("http://localhost:2000/rest/user/toggleprojectprivacy", project).then(() => {
+        axios.get("http://localhost:2000/rest/user/getjoinedprojects")
+        .then(response => {
+          this.joinedProjects = response.data
+        })
+        axios.get("http://localhost:2000/rest/user/getownedprojects")
+        .then(response => {
+          this.ownedProjects = response.data
+        })
+      })
+    },
     match() {
       axios.post("http://localhost:2000/rest/user/match").then(() => {
         axios.get("http://localhost:2000/rest/user/getjoinedprojects")
@@ -140,6 +155,14 @@ export default {
   align-content: center;
   vertical-align: auto;
 }
+.joinedprojects {
+  width: 70%;
+  margin: auto;
+  align-self: center;
+  text-align: left;
+  align-content: center;
+  vertical-align: auto;
+}
 .projbar {
   background-color: #f92672;
   height: 100%; /* Full-height: remove this if you want "auto" height */
@@ -161,6 +184,5 @@ export default {
 #matchbtn {
   margin-bottom: 20px;
   width: 70%;
-  margin-top: 20px;
 }
 </style>

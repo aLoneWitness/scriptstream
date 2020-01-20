@@ -1,7 +1,52 @@
 <template>
   <div class="skillbar">
     <h2>Skills</h2>
-    <b-button v-on:click="addSkill()" variant="success" id="addbtn">Add skill</b-button>
+    <b-button v-b-modal.modal-prevent-closin variant="success" id="addbtn">Add skill</b-button>
+
+    <b-modal
+      id="modal-prevent-closin"
+      ref="modal"
+      title="Add a project"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form">
+        <b-form-group
+          :state="nameState"
+          label="Skill Name"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="name"
+            :state="nameState"
+            required
+            >
+          </b-form-input>
+        </b-form-group>
+        <b-form-group
+          :state="percentState"
+          label="Skill percentage:"
+          label-for="percentage-input"
+          invalid-feedback="Your skill cant be zero."
+        >
+          <b-form-input
+            id="percentage-input"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            v-model="percentage"
+            :state="percentState"
+            required
+          >
+          </b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
+    
     <b-list-group class="skill">
       <b-list-group-item v-for="skill in skills" :key="skill">
         {{skill.name}}
@@ -24,10 +69,38 @@ export default {
   },
   data() {
     return {
-      skills: Object
+      skills: Object,
+      name: '',
+      nameState: null,
+      percentage: Number,
+      percentState: null
     }
   },
   methods: {
+    // MODAL SHIZZLE
+    checkFormValidity() {
+      const valid = this.$refs.form.checkValidity()
+      this.nameState = valid
+      this.percentState = valid
+      return valid
+    },
+    handleOk(e){
+      e.preventDefault()
+      if(!this.checkFormValidity()){
+        return
+      }
+
+      this.addSkill(this.name, Number(this.percentage))
+
+      this.$nextTick(() => {
+        this.$bvModal.hide('modal-prevent-closin')
+      })
+    },
+    resetModal() {
+      this.name = ''
+      this.percentage = 50
+    },
+
     removeSkill(skill) {
       axios.post('http://localhost:2000/rest/user/removeskill', skill)
       .then(() => {
@@ -37,10 +110,10 @@ export default {
         })
       })
     },
-    addSkill() {
+    addSkill(name, percentage) {
       var skill = {
-        name: "Machine Learning",
-        sPercentage: 30,
+        name: name,
+        sPercentage: percentage,
       }
       axios.post('http://localhost:2000/rest/user/addskill', skill)
       .then(() => {
