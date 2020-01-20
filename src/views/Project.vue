@@ -1,7 +1,7 @@
 <template>
   <div>
-    <codeview v-bind:projectUUID="$route.params.projectuuid"></codeview>
-    <chatbar v-bind:projectUUID="$route.params.projectuuid"></chatbar>
+    <codeview v-bind:projectUUID="$route.params.uuid" v-bind:projectName="$route.params.project.name"></codeview>
+    <chatbar v-bind:projectUUID="$route.params.uuid"></chatbar>
   </div>
 </template>
 

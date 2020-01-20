@@ -21,7 +21,7 @@ const router = new Router({
       }
     },
     {
-      path: '/project/:projectuuid',
+      path: '/project/:uuid',
       name: 'project',
       component: Project,
       meta: {

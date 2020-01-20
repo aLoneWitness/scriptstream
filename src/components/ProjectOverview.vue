@@ -1,12 +1,41 @@
 <template>
   <div class="projbar">
     <h2>Projects</h2>
-    <b-button v-on:click="addProject()" variant="success" id="addbtn">New project</b-button>
+    <b-button v-b-modal.modal-prevent-closing variant="success" id="addbtn">New project</b-button>
+
+    <b-modal
+      id="modal-prevent-closing"
+      ref="modal"
+      title="Add a project"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <form ref="form">
+        <b-form-group
+          :state="nameState"
+          label="Name"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="name"
+            :state="nameState"
+            required
+            >
+          </b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
+
     <b-list-group class="ownedprojects">
       <b-list-group-item v-for="oProject in ownedProjects" :key="oProject">
         {{oProject.name}}
-        <b-button v-on:click="gotoProject(oProject)" variant="success" style="float: right" size="sm">Join</b-button>
-        <b-button v-on:click="deleteProject(oProject)" variant="danger" style="float: right" size="sm">Delete</b-button>
+        <b-button-group style="float: right">
+          <b-button v-on:click="gotoProject(oProject)" variant="success" size="sm">Join</b-button>
+          <b-button v-on:click="deleteProject(oProject)" variant="danger" size="sm">Delete</b-button>
+        </b-button-group>
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -30,23 +59,35 @@ export default {
   data() {
     return {
       ownedProjects: Object,
-      joinedProjects: Object
+      joinedProjects: Object,
+      nameState: null,
+      name: '',
     }
   },
   methods: {
-    addProject() {
+    checkFormValidity() {
+      const valid = this.$refs.form.checkValidity()
+      this.nameState = valid
+      return valid
+    },
+    handleOk(e){
+      e.preventDefault()
+      if(!this.checkFormValidity()){
+        return
+      }
+
+      this.addProject(this.name)
+
+      this.$nextTick(() => {
+        this.$bvModal.hide('modal-prevent-closing')
+      })
+    },
+    resetModal() {
+      this.name = ''
+    },
+    addProject(name) {
       var project = {
-        name: "My New Project",
-        requiredSkills: [
-          {
-            name: "ML",
-            sPercentage: 30
-          },
-          {
-            name: "Python",
-            sPercentage: 30
-          }
-        ]
+        name: name
       }
       axios.post('http://localhost:2000/rest/user/createproject', project)
       .then(() => {
@@ -57,13 +98,31 @@ export default {
       })
     },
     gotoProject(project) {
-      this.$router.push({ name: 'project', params: { projectuuid: project.uuid } })
+      this.$router.push({ name: 'project', params: { project: project, uuid: project.uuid } })
+    },
+    deleteProject(project) {
+      axios.post('http://localhost:2000/rest/user/removeproject', project)
+      .then(() => {
+        axios.get('http://localhost:2000/rest/user/getownedprojects')
+        .then(response => {
+          this.ownedProjects = response.data
+        })
+      })
     }
   }
 }
 </script>
 
 <style>
+.ownedprojects {
+  height: 50px;
+  width: 70%;
+  margin: auto;
+  align-self: center;
+  text-align: left;
+  align-content: center;
+  vertical-align: auto;
+}
 .projbar {
   background-color: #f92672;
   height: 100%; /* Full-height: remove this if you want "auto" height */

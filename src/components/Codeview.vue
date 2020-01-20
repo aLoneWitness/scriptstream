@@ -41,6 +41,8 @@ export default {
         "Javascript"
       ]
 
+      
+
       this.socket = new WebSocket("ws://localhost:8025/websockets/codestream/" + this.projectUUID + "/" + this.$store.state.token)
 
       let loader = this.$loading.show({
@@ -51,6 +53,12 @@ export default {
       this.socket.onopen = function() {  
         loader.hide()
       };
+
+
+      let router = this.$router
+      this.socket.onclose = function() {
+        router.push('/')
+      }
 
       this.socket.onmessage = this.onExternalChange
     },

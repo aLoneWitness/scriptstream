@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import SkillOverview from '../components/SkillOverview.vue'
 import ProjectOverview from '../components/ProjectOverview.vue'
 

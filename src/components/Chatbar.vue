@@ -41,10 +41,14 @@ export default {
       canCancel: false,
     });
 
-
     this.socket.onopen = function() {  
       loader.hide()
     };
+
+    let router = this.$router
+    this.socket.onclose = function() {
+      router.push('/')
+    }
 
     this.socket.onmessage = this.onMessage
   },
