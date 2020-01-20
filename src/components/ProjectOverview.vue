@@ -28,16 +28,26 @@
         </b-form-group>
       </form>
     </b-modal>
-
     <b-list-group class="ownedprojects">
       <b-list-group-item v-for="oProject in ownedProjects" :key="oProject">
-        {{oProject.name}}
+      {{oProject.name}}
         <b-button-group style="float: right">
           <b-button v-on:click="gotoProject(oProject)" variant="success" size="sm">Join</b-button>
           <b-button v-on:click="deleteProject(oProject)" variant="danger" size="sm">Delete</b-button>
         </b-button-group>
       </b-list-group-item>
-    </b-list-group>
+    </b-list-group> 
+    <b-button v-on:click="match()" variant="success" id="matchbtn">Match me with a project</b-button>
+
+    <b-list-group class="joinedprojects">
+      <b-list-group-item v-for="jProject in joinedProjects" :key="jProject">
+      {{jProject.name}}
+        <b-button-group style="float: right">
+          <b-button v-on:click="gotoProject(jProject)" variant="success" size="sm">Join</b-button>
+          <b-button v-on:click="leaveProject(jProject)" variant="danger" size="sm">Leave</b-button>
+        </b-button-group>
+      </b-list-group-item>
+    </b-list-group> 
   </div>
 </template>
 
@@ -65,6 +75,14 @@ export default {
     }
   },
   methods: {
+    match() {
+      axios.post("http://localhost:2000/rest/user/match").then(() => {
+        axios.get("http://localhost:2000/rest/user/getjoinedprojects")
+        .then(response => {
+          this.joinedProjects = response.data
+        })
+      })
+    },
     checkFormValidity() {
       const valid = this.$refs.form.checkValidity()
       this.nameState = valid
@@ -115,7 +133,6 @@ export default {
 
 <style>
 .ownedprojects {
-  height: 50px;
   width: 70%;
   margin: auto;
   align-self: center;
@@ -140,5 +157,10 @@ export default {
 #addbtn {
   margin-bottom: 20px;
   width: 70%;
+}
+#matchbtn {
+  margin-bottom: 20px;
+  width: 70%;
+  margin-top: 20px;
 }
 </style>
