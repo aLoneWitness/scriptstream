@@ -5,6 +5,7 @@ import Project from './views/Project.vue'
 import Login from './views/Login.vue'
 import store from './store'
 import Dashboard from './views/Dashboard.vue'
+import axios from 'axios'
 
 Vue.use(Router)
 
@@ -49,7 +50,14 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     if(store.getters.isLoggedIn) {
-      next()
+      axios.get("http://localhost:2000/rest/auth/verify")
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        next('/logout')
+      })
+      
       return
     }
     next('/login')

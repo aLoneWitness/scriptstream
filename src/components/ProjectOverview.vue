@@ -32,8 +32,8 @@
     <b-list-group class="ownedprojects">
       <b-list-group-item v-for="oProject in ownedProjects" :key="oProject">
       {{oProject.name}}
-        <b-button v-on:click="togglePrivacy(oProject)" variant="warning" size="sm">Make Public</b-button>
         <b-button-group style="float: right">
+          <b-button v-on:click="togglePrivacy(oProject)" variant="warning" size="sm">Make Public</b-button>
           <b-button v-on:click="gotoProject(oProject)" variant="success" size="sm">Join</b-button>
           <b-button v-on:click="deleteProject(oProject)" variant="danger" size="sm">Delete</b-button>
         </b-button-group>
@@ -46,6 +46,7 @@
       <b-list-group-item v-for="jProject in joinedProjects" :key="jProject">
       {{jProject.name}}
         <b-button-group style="float: right">
+          <b-button v-on:click="togglePrivacy(jProject)" variant="warning" size="sm">Make Private</b-button>
           <b-button v-on:click="gotoProject(jProject)" variant="success" size="sm">Join</b-button>
           <b-button v-on:click="leaveProject(jProject)" variant="danger" size="sm">Leave</b-button>
         </b-button-group>

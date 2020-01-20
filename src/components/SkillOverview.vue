@@ -1,6 +1,7 @@
 <template>
   <div class="skillbar">
     <h2>Skills</h2>
+    <h4 style="margin-top: 50px">Personal Skills</h4>
     <b-button v-b-modal.modal-prevent-closin variant="success" id="addbtn">Add skill</b-button>
 
     <b-modal
