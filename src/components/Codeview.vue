@@ -34,6 +34,7 @@ import { Ace as AceEditor } from 'vue2-brace-editor';
 
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
+import axios from 'axios';
 
 export default {
     mounted: function(){
@@ -41,7 +42,10 @@ export default {
         "Javascript"
       ]
 
-      
+      axios.get('http://localhost:2000/rest/user/getskills')
+      .then(response => {
+        this.skills = response.data
+      })
 
       this.socket = new WebSocket("ws://localhost:8025/websockets/codestream/" + this.projectUUID + "/" + this.$store.state.token)
 

@@ -32,8 +32,11 @@
     <b-list-group class="ownedprojects">
       <b-list-group-item v-for="oProject in ownedProjects" :key="oProject">
       {{oProject.name}}
+        <b-badge v-for="skill in oProject.requiredSkills" :key="skill" variant="primary" pill>{{skill.name}}</b-badge>
         <b-button-group style="float: right">
-          <b-button v-on:click="togglePrivacy(oProject)" variant="warning" size="sm">Make Public</b-button>
+          <b-button v-on:click="showNewSkillModal(oProject)" variant="warning" size="sm">Add skill</b-button>
+          <b-button v-if="oProject.isPublic" v-on:click="togglePrivacy(oProject)" variant="warning" size="sm">Make private</b-button>
+          <b-button v-else v-on:click="togglePrivacy(oProject)" variant="warning" size="sm">Make public</b-button>
           <b-button v-on:click="gotoProject(oProject)" variant="success" size="sm">Join</b-button>
           <b-button v-on:click="deleteProject(oProject)" variant="danger" size="sm">Delete</b-button>
         </b-button-group>
@@ -43,15 +46,54 @@
     <b-button v-on:click="match()" variant="success" id="matchbtn">Match me with a project</b-button>
 
     <b-list-group class="joinedprojects">
+      <b-alert
+      :show="dismissCountDown"
+      dismissible
+      variant="warning"
+      @dismissed="dismissCountDown=0"
+      @dismiss-count-down="countDownChanged"
+    >
+      <p>There are no projects available that fit your style. Consider adding more skills.</p>
+      <b-progress
+        variant="warning"
+        :max="dismissSecs"
+        :value="dismissCountDown"
+        height="4px"
+      ></b-progress>
+    </b-alert>
       <b-list-group-item v-for="jProject in joinedProjects" :key="jProject">
       {{jProject.name}}
         <b-button-group style="float: right">
-          <b-button v-on:click="togglePrivacy(jProject)" variant="warning" size="sm">Make Private</b-button>
           <b-button v-on:click="gotoProject(jProject)" variant="success" size="sm">Join</b-button>
           <b-button v-on:click="leaveProject(jProject)" variant="danger" size="sm">Leave</b-button>
         </b-button-group>
       </b-list-group-item>
     </b-list-group> 
+
+
+    <b-modal
+      ref="skill-add-modal"
+      id="skill-add-modal"
+      title="Add a skill."
+      @ok="addSkill"
+    >
+      <form ref="skillform">
+        <b-form-group
+          :state="skillNameState"
+          label="Name"
+          label-for="skill-name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="skill-name-input"
+            v-model="skillName"
+            :state="skillNameState"
+            required
+            >
+          </b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
   </div>
 </template>
 
@@ -60,12 +102,12 @@ import axios from 'axios';
 
 export default {
   mounted() {
-    axios.get("http://localhost:2000/rest/user/getownedprojects")
+    axios.get("http://localhost:2000/rest/project/getowned")
       .then(response => {
         this.ownedProjects = response.data
       })
 
-    axios.get("http://localhost:2000/rest/user/getjoinedprojects")
+    axios.get("http://localhost:2000/rest/project/getjoined")
       .then(response => {
         this.joinedProjects = response.data
       })
@@ -76,16 +118,42 @@ export default {
       joinedProjects: Object,
       nameState: null,
       name: '',
+      skillName: '',
+      skillNameState: null,
+      dismissSecs: 5,
+      dismissCountDown: 0,
+      selectedProject: Object
     }
   },
   methods: {
+    showNewSkillModal(proj){
+      this.$refs['skill-add-modal'].show()
+      this.selectedProject = proj
+    },
+    addSkill(){
+      var skill = {
+        name: this.skillName
+      }
+      axios.post("http://localhost:2000/rest/project/addskill?projectuuid=" + this.selectedProject.uuid, skill).then(() => {
+        axios.get("http://localhost:2000/rest/project/getowned")
+        .then(response => {
+          this.ownedProjects = response.data
+        })
+      })
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs
+    },
     togglePrivacy(project){
-      axios.post("http://localhost:2000/rest/user/toggleprojectprivacy", project).then(() => {
-        axios.get("http://localhost:2000/rest/user/getjoinedprojects")
+      axios.post("http://localhost:2000/rest/project/toggleprivacy", project).then(() => {
+        axios.get("http://localhost:2000/rest/project/getjoined")
         .then(response => {
           this.joinedProjects = response.data
         })
-        axios.get("http://localhost:2000/rest/user/getownedprojects")
+        axios.get("http://localhost:2000/rest/project/getowned")
         .then(response => {
           this.ownedProjects = response.data
         })
@@ -93,10 +161,12 @@ export default {
     },
     match() {
       axios.post("http://localhost:2000/rest/user/match").then(() => {
-        axios.get("http://localhost:2000/rest/user/getjoinedprojects")
+        axios.get("http://localhost:2000/rest/project/getowned")
         .then(response => {
           this.joinedProjects = response.data
         })
+      }).catch(() => {
+        this.showAlert()
       })
     },
     checkFormValidity() {
@@ -123,9 +193,9 @@ export default {
       var project = {
         name: name
       }
-      axios.post('http://localhost:2000/rest/user/createproject', project)
+      axios.post('http://localhost:2000/rest/project/create', project)
       .then(() => {
-        axios.get('http://localhost:2000/rest/user/getownedprojects')
+        axios.get('http://localhost:2000/rest/project/getowned')
         .then(response => {
           this.ownedProjects = response.data
         })
@@ -135,9 +205,9 @@ export default {
       this.$router.push({ name: 'project', params: { project: project, uuid: project.uuid } })
     },
     deleteProject(project) {
-      axios.post('http://localhost:2000/rest/user/removeproject', project)
+      axios.post('http://localhost:2000/rest/project/remove', project)
       .then(() => {
-        axios.get('http://localhost:2000/rest/user/getownedprojects')
+        axios.get('http://localhost:2000/rest/project/getowned')
         .then(response => {
           this.ownedProjects = response.data
         })
