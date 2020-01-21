@@ -126,6 +126,14 @@ export default {
     }
   },
   methods: {
+    leaveProject(jProject){
+      axios.post("http://localhost:2000/rest/project/leave", jProject).then(() => {
+        axios.get("http://localhost:2000/rest/project/getjoined")
+        .then(response => {
+          this.joinedProjects = response.data
+        })
+      })
+    },
     showNewSkillModal(proj){
       this.$refs['skill-add-modal'].show()
       this.selectedProject = proj
@@ -161,7 +169,7 @@ export default {
     },
     match() {
       axios.post("http://localhost:2000/rest/user/match").then(() => {
-        axios.get("http://localhost:2000/rest/project/getowned")
+        axios.get("http://localhost:2000/rest/project/getjoined")
         .then(response => {
           this.joinedProjects = response.data
         })
